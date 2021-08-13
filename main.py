@@ -55,7 +55,6 @@ class MedicalImage(Widget):
 class NArSegInterface(Widget):
     magnitude = ObjectProperty(None)
     phase = ObjectProperty(None)
-    refresh = ObjectProperty(None)
     filedrop_timer, filedrop_window = None, 0.01 # will wait for 10 milliseconds for file
     current_files = []
 
@@ -67,10 +66,6 @@ class NArSegInterface(Widget):
         Window.bind(on_dropfile=self.filedrop)
         self.magnitude.render()
         self.phase.render()
-        self.refresh.on_press = self.refresh_
-    
-    def refresh_(self):
-        self.magnitude.render()
 
     def filedrop(self, _, file_path):
         if not self.filedrop_timer.is_alive():

@@ -26,7 +26,6 @@
 <NArSegInterface>:
     magnitude: magnitude_image
     phase: phase_image
-    refresh: refresh_btn
 
     size: root.size
 
@@ -42,8 +41,24 @@
             pos_hint: {"top": 1, "right": 1}
             size_hint: 0.5, 0.6
 
-        Button:
-            id: refresh_btn
-            pos_hint: {"bottom": 50, "left": 50}
-            size_hint: .3, .1
-            text: "Refresh"
+        GridLayout:
+            cols: 2
+            pos_hint: {"top": 0.4}
+            size_hint: 0.35, 0.25
+            padding: 30, 30, 30, 20
+            spacing: 25, 10
+            Button:
+                text: "Original"
+
+            Button:
+                text: "4 Arteries"
+
+            Button:
+                text: "Binary"
+
+            Button:
+                text: "6 Arteries"
+
+            Button:
+                text: "Multi Label"
+
