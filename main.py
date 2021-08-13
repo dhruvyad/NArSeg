@@ -16,6 +16,18 @@ import threading
 
 import matplotlib.pyplot as plt
 
+
+
+def hide_widget(wid, dohide=True):
+    if hasattr(wid, 'saved_attrs'):
+        if not dohide:
+            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
+            del wid.saved_attrs
+    elif dohide:
+        wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
+        wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
+
+
 class MedicalImage(Widget):
     image = ObjectProperty(None)
     image_size = NumericProperty()
@@ -49,6 +61,7 @@ class MedicalImage(Widget):
         return image
 
     def resize(self, *args): # TODO: don't resize every single pixel, add timer to reduce computation
+        hide_widget(self.image, True) # TODO: remove hide image and change to hide only when files are unavailable
         self.render()
 
 
@@ -64,8 +77,6 @@ class NArSegInterface(Widget):
 
     def render(self):
         Window.bind(on_dropfile=self.filedrop)
-        self.magnitude.render()
-        self.phase.render()
 
     def filedrop(self, _, file_path):
         if not self.filedrop_timer.is_alive():

@@ -3,13 +3,6 @@
 <MedicalImage>:
     image: texture_rect
 
-    canvas:
-        Color:
-            rgba: 1, 1, 1, 1
-        Ellipse:
-            pos: root.pos
-            size: root.size
-
     canvas.before:
         Color:
             rgba: .5, .5, .5, 1
@@ -17,11 +10,16 @@
             width: 2
             rectangle: self.x, self.y, self.width, self.height
 
+    Label:
+        pos: root.pos
+        size: root.size
+        text: "Drag & Drop or Open Files"
+
     Image:
         id: texture_rect
         pos: root.pos
         size: root.size
-        background_color: 1, 0, 0, 1
+        background_color: 0, 0, 0, 0
 
 <NArSegInterface>:
     magnitude: magnitude_image
@@ -61,4 +59,15 @@
 
             Button:
                 text: "Multi Label"
+
+        GridLayout:
+            cols: 2
+            size_hint: 0.35, 0.10
+            padding: 30, 30, 30, 20
+            spacing: 25, 10
+            Button:
+                text: "Open Files"
+
+            Button:
+                text: "Download Results"
 
