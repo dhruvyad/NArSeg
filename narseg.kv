@@ -1,0 +1,49 @@
+
+
+<MedicalImage>:
+    image: texture_rect
+
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1
+        Ellipse:
+            pos: root.pos
+            size: root.size
+
+    canvas.before:
+        Color:
+            rgba: .5, .5, .5, 1
+        Line:
+            width: 2
+            rectangle: self.x, self.y, self.width, self.height
+
+    Image:
+        id: texture_rect
+        pos: root.pos
+        size: root.size
+        background_color: 1, 0, 0, 1
+
+<NArSegInterface>:
+    magnitude: magnitude_image
+    phase: phase_image
+    refresh: refresh_btn
+
+    size: root.size
+
+    FloatLayout:
+        size: root.size
+        MedicalImage:
+            id: magnitude_image
+            pos_hint: {"top": 1, "left": 1}
+            size_hint: 0.5, 0.6
+
+        MedicalImage:
+            id: phase_image
+            pos_hint: {"top": 1, "right": 1}
+            size_hint: 0.5, 0.6
+
+        Button:
+            id: refresh_btn
+            pos_hint: {"bottom": 50, "left": 50}
+            size_hint: .3, .1
+            text: "Refresh"
