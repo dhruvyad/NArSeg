@@ -43,20 +43,28 @@
             size_hint: 0.35, 0.25
             padding: 30, 30, 30, 20
             spacing: 25, 10
-            Button:
+
+            ToggleButton:
                 text: "Original"
+                group: 'view_type'
+                state: 'down'
 
-            Button:
-                text: "4 Arteries"
-
-            Button:
-                text: "Binary"
-
-            Button:
+            ToggleButton:
                 text: "6 Arteries"
+                group: 'artery_select_type'
+                state: 'down'
 
-            Button:
+            ToggleButton:
+                text: "Binary"
+                group: 'view_type'
+
+            ToggleButton:
+                text: "4 Arteries"
+                group: 'artery_select_type'
+
+            ToggleButton:
                 text: "Multi Label"
+                group: 'view_type'
 
         GridLayout:
             cols: 2
