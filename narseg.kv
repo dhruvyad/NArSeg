@@ -1,5 +1,3 @@
-
-
 <MedicalImage>:
     image: texture_rect
 
@@ -71,3 +69,20 @@
             Button:
                 text: "Download Results"
 
+        ResultsTable:
+            padding: 30, 30, 30, 30
+            pos_hint: {"top": 0.4, "right": 1}
+            size_hint: 0.65, 0.4
+
+
+<ResultsTable>:
+    table: table_layout
+
+    GridLayout:
+        id: table_layout
+        pos: root.pos
+        size: root.size
+        padding: 30, 30, 30, 30
+        row_force_default: True
+        row_default_height: 70
+        cols: 7
