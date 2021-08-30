@@ -1,3 +1,5 @@
+# Contains utils for various tasks needed by widgets
+
 import numpy as np
 from kivy.lang import Builder
 from file_utils import (
@@ -13,11 +15,11 @@ Hides/Shows a given widget
 def hide_widget(wid, dohide=True):
     if hasattr(wid, 'saved_attrs'):
         if not dohide:
-            wid.height, wid.size_hint_y, wid.opacity, wid.disabled = wid.saved_attrs
+            wid.opacity, wid.disabled = wid.saved_attrs
             del wid.saved_attrs
     elif dohide:
-        wid.saved_attrs = wid.height, wid.size_hint_y, wid.opacity, wid.disabled
-        wid.height, wid.size_hint_y, wid.opacity, wid.disabled = 0, None, 0, True
+        wid.saved_attrs = wid.opacity, wid.disabled
+        wid.opacity, wid.disabled = 0, True
 
 
 '''
@@ -65,7 +67,6 @@ Label:
     return cell
 
 
-
 '''
 Takes in a list of file paths, processes them, and returns
 two images for the magnitude and phase.
@@ -99,12 +100,15 @@ def get_mag_phase(files):
     mag = same_shape(mag)
     phase = same_shape(phase)
 
-    # convert data to a numpy tensor
-    mag = np.array(mag)
-    phase = np.array(phase)
+    # convert data to a numpy tensor if non empty
+    mag = np.array(mag) if len(mag) else None
+    phase = np.array(phase) if len(phase) else None
     
     # calculate mean of mag and phase data and return
-    return np.mean(mag, axis=0), np.mean(phase, axis=0)
+    mag = np.mean(mag, axis=0) if mag is not None else mag
+    phase = np.mean(phase, axis=0) if phase is not None else phase
+
+    return mag, phase
 
             
 

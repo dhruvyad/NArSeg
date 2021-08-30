@@ -13,10 +13,8 @@ class ResultsTable(Widget):
     def __init__(self, **kwargs):
         super(ResultsTable, self).__init__(**kwargs)
         Clock.schedule_once(self.populate)
-
-
         
-    def populate(self, *args):
+    def populate(self, *_):
         print('adding widgets!')
 
         cols = ['LVA', 'RVA', 'LICA', 'RICA', 'LECA', 'RECA']
