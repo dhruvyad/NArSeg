@@ -1,16 +1,18 @@
+from typing import Sized
 from kivy.core.window import Window
 from kivy.properties import (ObjectProperty)
 from kivy.uix.widget import Widget
-from utils import (get_mag_phase)
+from utils import (get_mag_phase, get_loading_screen)
 import threading
 from kivy.clock import mainthread
 from kivy.uix.behaviors import ToggleButtonBehavior
 
 from model.model_utils import ModelUtils
 
-
+from kivy.clock import Clock
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 
 class NArSegInterface(Widget):
@@ -51,6 +53,16 @@ class NArSegInterface(Widget):
             button.bind(on_press=self.on_artery_button_click)
         # get an instance of model utilities
         self.model_utils = ModelUtils()
+        # initialize loading screen
+        self.loading_screen = get_loading_screen()
+
+    # reset relevant variables when new files are dropped
+    def reset_variables(self):
+        self.magnitude_img = None
+        self.phase_img = None
+        self.binary_mask = None
+        self.binary_manual_mask = None
+        self.multilabel_mask = None
 
     @mainthread
     def render(self):
@@ -59,15 +71,28 @@ class NArSegInterface(Widget):
         if self.phase_img is not None:
             self.phase.render(self.phase_img)
 
+    @mainthread
+    def start_loading(self, *_):
+        self.loading_screen.open(animation=False)
+
+    @mainthread
+    def end_loading(self, *_):
+        self.loading_screen.dismiss()
+
+    def computation(self, *_):
+        time.sleep(3)
+        self.end_loading()
+    
     def on_view_button_click(self, button):
         text = button.text
         if text == "ORIGINAL":
+            # self.start_loading()
             print('Orig')
+            # self.end_loading()
         if text == "BINARY":
-            image = np.array([self.magnitude_img, self.phase_img])
-            mask = self.model_utils.binary_pred(image)
-            plt.imshow(mask)
-            plt.show()
+            self.start_loading()
+            threading.Thread(target=self.computation).start()
+
         if text == "MULTI LABEL":
             image = np.array([self.magnitude_img, self.phase_img])
             mask = self.model_utils.multilabel_pred(image)
@@ -89,6 +114,7 @@ class NArSegInterface(Widget):
         self.current_files.append(file_path)
 
     def process_files(self):
+        self.reset_variables() # reset current data
         mag_image, phase_image = get_mag_phase(self.current_files)
         if mag_image is not None:
             self.magnitude_img = mag_image

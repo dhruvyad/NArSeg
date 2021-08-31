@@ -7,7 +7,8 @@ from file_utils import (
     is_magnitude, is_phase, is_neither,
     same_shape
 )
-
+from kivy.uix.modalview import ModalView
+from kivy.uix.image import Image
 
 '''
 Hides/Shows a given widget
@@ -66,6 +67,18 @@ Label:
         ''')
     return cell
 
+'''
+Returns the design for the application
+loading screen
+'''
+def get_loading_screen():
+    loading_screen = ModalView(auto_dismiss=False, background_color=(0, 0, 0, 0))
+    buffer = Image(
+            source='images/buffer.gif',
+            size_hint=(0.05, 0.05),
+            anim_delay=0.04)
+    loading_screen.add_widget(buffer)
+    return loading_screen
 
 '''
 Takes in a list of file paths, processes them, and returns
