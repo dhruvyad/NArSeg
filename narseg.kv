@@ -42,29 +42,79 @@
             pos_hint: {"top": 0.4}
             size_hint: 0.35, 0.25
             padding: 30, 30, 30, 20
-            spacing: 25, 10
+            spacing: 25, 15
 
             ToggleButton:
-                text: "Original"
+                text: "ORIGINAL"
+                font_name: 'Lato/Lato-Bold.ttf'
                 group: 'view_type'
                 state: 'down'
+                background_down: 'images/bg-white.png'
+                background_color: (1, 1, 1, 1) if self.state == 'down' else (0, 0, 0, 1)
+                color: (0, 0, 0, 1) if self.state == 'down' else (1, 1, 1, 1)
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Line:
+                        width: 4
+                        rectangle: self.x, self.y, self.width, self.height
 
             ToggleButton:
-                text: "6 Arteries"
+                text: "6 ARTERIES"
+                font_name: 'Lato/Lato-Bold.ttf'
                 group: 'artery_select_type'
                 state: 'down'
+                background_down: 'images/bg-white.png'
+                background_color: (1, 1, 1, 1) if self.state == 'down' else (0, 0, 0, 1)
+                color: (0, 0, 0, 1) if self.state == 'down' else (1, 1, 1, 1)
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Line:
+                        width: 4
+                        rectangle: self.x, self.y, self.width, self.height
 
             ToggleButton:
-                text: "Binary"
+                text: "BINARY"
+                font_name: 'Lato/Lato-Bold.ttf'
                 group: 'view_type'
+                background_down: 'images/bg-white.png'
+                background_color: (1, 1, 1, 1) if self.state == 'down' else (0, 0, 0, 1)
+                color: (0, 0, 0, 1) if self.state == 'down' else (1, 1, 1, 1)
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Line:
+                        width: 4
+                        rectangle: self.x, self.y, self.width, self.height
 
             ToggleButton:
-                text: "4 Arteries"
+                text: "4 ARTERIES"
+                font_name: 'Lato/Lato-Bold.ttf'
                 group: 'artery_select_type'
+                background_down: 'images/bg-white.png'
+                background_color: (1, 1, 1, 1) if self.state == 'down' else (0, 0, 0, 1)
+                color: (0, 0, 0, 1) if self.state == 'down' else (1, 1, 1, 1)
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Line:
+                        width: 4
+                        rectangle: self.x, self.y, self.width, self.height
 
             ToggleButton:
-                text: "Multi Label"
+                text: "MULTI LABEL"
+                font_name: 'Lato/Lato-Bold.ttf'
                 group: 'view_type'
+                background_down: 'images/bg-white.png'
+                background_color: (1, 1, 1, 1) if self.state == 'down' else (0, 0, 0, 1)
+                color: (0, 0, 0, 1) if self.state == 'down' else (1, 1, 1, 1)
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Line:
+                        width: 4
+                        rectangle: self.x, self.y, self.width, self.height
 
         GridLayout:
             cols: 2
@@ -72,10 +122,30 @@
             padding: 30, 30, 30, 20
             spacing: 25, 10
             Button:
-                text: "Open Files"
+                text: "OPEN FILES"
+                font_name: 'Lato/Lato-Bold.ttf'
+                background_down: 'images/bg-white.png'
+                background_color: (1, 1, 1, 1) if self.state == 'down' else (0, 0, 0, 1)
+                color: (0, 0, 0, 1) if self.state == 'down' else (1, 1, 1, 1)
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Line:
+                        width: 4
+                        rectangle: self.x, self.y, self.width, self.height
 
             Button:
-                text: "Download Results"
+                text: "SAVE RESULTS"
+                font_name: 'Lato/Lato-Bold.ttf'
+                background_down: 'images/bg-white.png'
+                background_color: (1, 1, 1, 1) if self.state == 'down' else (0, 0, 0, 1)
+                color: (0, 0, 0, 1) if self.state == 'down' else (1, 1, 1, 1)
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Line:
+                        width: 4
+                        rectangle: self.x, self.y, self.width, self.height
 
         ResultsTable:
             padding: 30, 30, 30, 30

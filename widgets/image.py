@@ -37,13 +37,6 @@ class MedicalImage(Widget):
         self.image.texture = texture
         self.texture = texture
 
-
-    def get_image(self):
-        image = np.load('HC_040.npz')
-        image = image.f.arr_0.astype(np.float32)
-        image = np.array(image / np.max(image) * 255, dtype=np.uint8)
-        return image
-
     def resize(self, *args): # TODO: don't resize every single pixel, add timer to reduce computation
         hide_widget(self.image, True) # TODO: remove hide image and change to hide only when files are unavailable
         # self.render() # TODO: add this back in later to make resize adjustment possible

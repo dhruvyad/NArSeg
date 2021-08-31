@@ -10,7 +10,6 @@ class NArSegApp(App):
     def build(self):
         Window.size = (960, 800)
         interface = NArSegInterface()
-        interface.render()
         return interface
 
 
