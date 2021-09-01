@@ -1,18 +1,29 @@
-from typing import Sized
 from kivy.core.window import Window
 from kivy.properties import (ObjectProperty)
 from kivy.uix.widget import Widget
 from utils import (get_mag_phase, get_loading_screen)
+from image_utils import (get_boxes, add_boxes, detect_contours, add_contours)
 import threading
 from kivy.clock import mainthread
 from kivy.uix.behaviors import ToggleButtonBehavior
-
 from model.model_utils import ModelUtils
-
-from kivy.clock import Clock
-import matplotlib.pyplot as plt
 import numpy as np
-import time
+
+
+import matplotlib.pyplot as plt
+
+# DEFINE MAIN CONSTANTS BELOW
+
+# constants that are the same as button text in UI
+# used to handle click events
+ORIGINAL_VIEW = "ORIGINAL"
+BINARY_VIEW = "BINARY"
+MULTILABEL_VIEW = "MULTI LABEL"
+ARTERIES_6 = "6 ARTERIES"
+ARTERIES_4 = "4 ARTERIES"
+# UI constants
+BINARY_CONTOUR_COLOR = (255, 0, 0)
+
 
 
 class NArSegInterface(Widget):
@@ -23,7 +34,9 @@ class NArSegInterface(Widget):
 
     # variables to keep a list of all the toggle buttons
     view_buttons = None
+    current_view = ORIGINAL_VIEW
     artery_buttons = None
+    current_arteries = ARTERIES_6
 
     # store current phase and magnitude images
     magnitude_img = None
@@ -31,7 +44,7 @@ class NArSegInterface(Widget):
 
     # store model related cached data
     binary_mask = None
-    binary_manual_mask = None
+    binary_manual_mask = None # multilabels set manually by user
     multilabel_mask = None
 
 
@@ -66,10 +79,24 @@ class NArSegInterface(Widget):
 
     @mainthread
     def render(self):
-        if self.magnitude_img is not None:
-            self.magnitude.render(self.magnitude_img)
-        if self.phase_img is not None:
-            self.phase.render(self.phase_img)
+        magnitude = self.magnitude_img
+        phase = self.phase_img
+
+        if self.current_view == BINARY_VIEW:
+            contours = detect_contours(self.binary_mask)
+            magnitude = add_contours(magnitude, contours, BINARY_CONTOUR_COLOR)
+            phase = add_contours(phase, contours, BINARY_CONTOUR_COLOR)
+
+        if self.current_view == MULTILABEL_VIEW:
+            contours = detect_contours(self.multilabel_mask)
+            boxes = get_boxes(self.multilabel_mask, contours)
+            magnitude = add_boxes(magnitude, boxes)
+            phase = add_boxes(phase, boxes)
+
+        if magnitude is not None:
+            self.magnitude.render(magnitude)
+        if phase is not None:
+            self.phase.render(phase)
 
     @mainthread
     def start_loading(self, *_):
@@ -79,25 +106,35 @@ class NArSegInterface(Widget):
     def end_loading(self, *_):
         self.loading_screen.dismiss()
 
-    def computation(self, *_):
-        time.sleep(3)
+    def get_binary_mask(self):
+        image = np.array([self.magnitude_img, self.phase_img])
+        self.binary_mask = self.model_utils.binary_pred(image)
+        self.render()
+        self.end_loading()
+
+    def get_multilabel_mask(self):
+        image = np.array([self.magnitude_img, self.phase_img])
+        self.multilabel_mask = self.model_utils.multilabel_pred(image)
+        self.render()
         self.end_loading()
     
     def on_view_button_click(self, button):
-        text = button.text
-        if text == "ORIGINAL":
-            # self.start_loading()
-            print('Orig')
-            # self.end_loading()
-        if text == "BINARY":
-            self.start_loading()
-            threading.Thread(target=self.computation).start()
-
-        if text == "MULTI LABEL":
-            image = np.array([self.magnitude_img, self.phase_img])
-            mask = self.model_utils.multilabel_pred(image)
-            plt.imshow(mask)
-            plt.show()
+        view = button.text
+        self.current_view = view # update current view
+        if view == ORIGINAL_VIEW:
+            self.render()
+        if view == BINARY_VIEW:
+            if self.binary_mask is not None:
+                self.render()
+            else:
+                self.start_loading()
+                threading.Thread(target=self.get_binary_mask).start()
+        if view == MULTILABEL_VIEW:
+            if self.multilabel_mask is not None:
+                self.render()
+            else:
+                self.start_loading()
+                threading.Thread(target=self.get_multilabel_mask).start()
 
     def on_artery_button_click(self, button):
         print(button.text)

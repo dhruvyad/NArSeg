@@ -25,14 +25,18 @@ class MedicalImage(Widget):
     def render(self, image):
         hide_widget(self.image, False)
 
-        image = np.array(image / np.max(image) * 255, dtype=np.uint8)
+        image = np.flipud(image) # apparently blitting flips, so this corrects for it
+
+        if(len(image.shape) == 2): # TODO: is this grayscale to RGB conversion robust? what if RGB is passed?
+            image = np.array(image / np.max(image) * 255, dtype=np.uint8)
+            image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
 
         self.image_size = int(min(self.size)) - 1
         
         image = cv2.resize(image, dsize=(self.image_size, self.image_size), interpolation=cv2.INTER_CUBIC)
 
-        texture = Texture.create(size=image.shape)
-        texture.blit_buffer(image.tostring(), colorfmt='luminance', bufferfmt='ubyte')
+        texture = Texture.create(size=image.shape[:2], colorfmt='rgb')
+        texture.blit_buffer(image.tostring(), colorfmt='rgb', bufferfmt='ubyte')
 
         self.image.texture = texture
         self.texture = texture
