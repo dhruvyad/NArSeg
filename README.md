@@ -1,7 +1,7 @@
 # NArSeg (Neck Artery Segmentation)
 
 <!-- ![GUI Image](https://i.postimg.cc/4xVNmdb5/image.png) -->
-![GUI Image](https://i.ibb.co/MBPdzNw/ezgif-7-7ecac294b4df.gif)
+![GUI Image](./images/demo.gif)
 
 ## Features
 
