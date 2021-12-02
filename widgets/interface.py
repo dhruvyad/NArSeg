@@ -2,7 +2,7 @@ from kivy.core.window import Window
 from kivy.properties import (ObjectProperty)
 from kivy.uix.widget import Widget
 from utils import (get_mag_phase, get_loading_screen)
-from image_utils import (get_boxes, add_boxes, detect_contours, add_contours)
+from image_utils import (get_area, get_boxes, get_pixels, add_boxes, detect_contours, add_contours, get_velocity, phase_enhance, make_vertical, make_horizontal)
 import threading
 from kivy.clock import mainthread
 from kivy.uix.behaviors import ToggleButtonBehavior
@@ -11,6 +11,7 @@ import numpy as np
 
 
 import matplotlib.pyplot as plt
+import easygui
 
 # DEFINE MAIN CONSTANTS BELOW
 
@@ -29,6 +30,7 @@ BINARY_CONTOUR_COLOR = (255, 0, 0)
 class NArSegInterface(Widget):
     magnitude = ObjectProperty(None) # link to magnitude image in the UI
     phase = ObjectProperty(None) # link to phase image in the UI
+    table = ObjectProperty(None) # link to results table in the UI
     filedrop_timer, filedrop_window = None, 0.01 # will wait for 10 milliseconds for file
     current_files = [] # stores the paths to all the files being used right now
 
@@ -71,8 +73,8 @@ class NArSegInterface(Widget):
 
     # reset relevant variables when new files are dropped
     def reset_variables(self):
-        self.magnitude_img = None
-        self.phase_img = None
+        # self.magnitude_img = None
+        # self.phase_img = None
         self.binary_mask = None
         self.binary_manual_mask = None
         self.multilabel_mask = None
@@ -88,10 +90,30 @@ class NArSegInterface(Widget):
             phase = add_contours(phase, contours, BINARY_CONTOUR_COLOR)
 
         if self.current_view == MULTILABEL_VIEW:
+            # TODO: remove the make vertical and make horizontal flips
+            # and convert everything to all vertical or all horizontal
+            magnitude = make_vertical(magnitude)
+            phase = make_vertical(phase)
+            self.multilabel_mask = make_vertical(self.multilabel_mask)
+
             contours = detect_contours(self.multilabel_mask)
             boxes = get_boxes(self.multilabel_mask, contours)
+
+            # get calculations for results table
+            pixels = get_pixels(self.multilabel_mask, contours)
+            calculations = {}
+            calculations = get_velocity(self.magnitude_img, pixels, calculations)
+            calculations = get_area(self.magnitude_img, pixels, calculations)
+            print(calculations)
+            self.table.update(calculations)
+
             magnitude = add_boxes(magnitude, boxes)
             phase = add_boxes(phase, boxes)
+
+            # TODO: again, remove vertical-horizontal conversion below and keep all vertical instead
+            magnitude = make_horizontal(magnitude)
+            phase = make_horizontal(phase)
+            self.multilabel_mask = make_horizontal(self.multilabel_mask)
 
         if magnitude is not None:
             self.magnitude.render(magnitude)
@@ -107,13 +129,13 @@ class NArSegInterface(Widget):
         self.loading_screen.dismiss()
 
     def get_binary_mask(self):
-        image = np.array([self.magnitude_img, self.phase_img])
+        image = np.array([self.magnitude_img, phase_enhance(self.phase_img)])
         self.binary_mask = self.model_utils.binary_pred(image)
         self.render()
         self.end_loading()
 
     def get_multilabel_mask(self):
-        image = np.array([self.magnitude_img, self.phase_img])
+        image = np.array([self.magnitude_img, phase_enhance(self.phase_img)])
         self.multilabel_mask = self.model_utils.multilabel_pred(image)
         self.render()
         self.end_loading()
@@ -138,6 +160,14 @@ class NArSegInterface(Widget):
 
     def on_artery_button_click(self, button):
         print(button.text)
+
+    @mainthread
+    def on_open_files(self):
+        files = easygui.fileopenbox()
+        print(files)
+
+    def on_save_results(self):
+        pass
 
     def filedrop(self, _, file_path):
         if not self.filedrop_timer.is_alive():

@@ -6,6 +6,8 @@ from kivy.clock import Clock
 
 from utils import get_title_cell, get_row_cell
 
+from kivy.clock import mainthread
+
 
 class ResultsTable(Widget):
     table = ObjectProperty(None)
@@ -13,7 +15,36 @@ class ResultsTable(Widget):
     def __init__(self, **kwargs):
         super(ResultsTable, self).__init__(**kwargs)
         Clock.schedule_once(self.populate)
-        
+
+    @mainthread
+    def update(self, calculations):
+        print('GOT YOUR RESULTS!')
+        print(calculations)
+        cols = ['LVA', 'RVA', 'LICA', 'RICA', 'LECA', 'RECA']
+        rows = ['VELOCITY', 'AREA', 'SHAPE']
+
+        self.table.clear_widgets()
+
+        self.table.cols = len(cols) + 1
+
+        self.add2table(get_title_cell(''))
+
+        for col in cols:
+            self.add2table(get_title_cell(col))
+
+        for row in rows:
+            self.add2table(get_title_cell(row))
+            for col in cols:
+                if col in calculations:
+                    if row == "VELOCITY":
+                        self.add2table(get_row_cell(calculations[col]['velocity']))
+                    elif row == "AREA":
+                        self.add2table(get_row_cell(calculations[col]['area']))
+                    else:
+                        self.add2table(get_row_cell('0.0'))
+                else:
+                    self.add2table(get_row_cell('0.0'))
+
     def populate(self, *_):
         print('adding widgets!')
 

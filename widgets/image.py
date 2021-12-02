@@ -2,6 +2,7 @@ from kivy.core.window import Window
 from kivy.properties import (ObjectProperty, NumericProperty)
 from kivy.uix.widget import Widget
 from kivy.graphics.texture import Texture
+from image_utils import (make_vertical, make_horizontal)
 
 
 from utils import hide_widget
@@ -25,6 +26,7 @@ class MedicalImage(Widget):
     def render(self, image):
         hide_widget(self.image, False)
 
+        image = make_vertical(image) # TODO: remove conversions and make everything work on verticals instead
         image = np.flipud(image) # apparently blitting flips, so this corrects for it
 
         if(len(image.shape) == 2): # TODO: is this grayscale to RGB conversion robust? what if RGB is passed?
@@ -44,3 +46,6 @@ class MedicalImage(Widget):
     def resize(self, *args): # TODO: don't resize every single pixel, add timer to reduce computation
         hide_widget(self.image, True) # TODO: remove hide image and change to hide only when files are unavailable
         # self.render() # TODO: add this back in later to make resize adjustment possible
+
+
+

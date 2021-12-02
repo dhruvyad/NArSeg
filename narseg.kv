@@ -22,6 +22,7 @@
 <NArSegInterface>:
     magnitude: magnitude_image
     phase: phase_image
+    table: results_table
 
     size: root.size
 
@@ -109,6 +110,7 @@
                 background_down: 'images/bg-white.png'
                 background_color: (1, 1, 1, 1) if self.state == 'down' else (0, 0, 0, 1)
                 color: (0, 0, 0, 1) if self.state == 'down' else (1, 1, 1, 1)
+                on_press: root.on_save_results()
                 canvas.before:
                     Color:
                         rgba: 1, 1, 1, 1
@@ -127,6 +129,7 @@
                 background_down: 'images/bg-white.png'
                 background_color: (1, 1, 1, 1) if self.state == 'down' else (0, 0, 0, 1)
                 color: (0, 0, 0, 1) if self.state == 'down' else (1, 1, 1, 1)
+                on_press: root.on_open_files()
                 canvas.before:
                     Color:
                         rgba: 1, 1, 1, 1
@@ -148,6 +151,7 @@
                         rectangle: self.x, self.y, self.width, self.height
 
         ResultsTable:
+            id: results_table
             padding: 30, 30, 30, 30
             pos_hint: {"top": 0.4, "right": 1}
             size_hint: 0.65, 0.4
