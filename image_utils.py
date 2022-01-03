@@ -24,7 +24,7 @@ Detect the contours of a given numpy mask
 def detect_contours(image):
     image = normalize(image)
     _, image = cv2.threshold(image, 1, 255, cv2.THRESH_BINARY)
-    _, contours, _  = cv2.findContours(image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _  = cv2.findContours(image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE) # should be "_, contours, _" for opencv versions <= 3.4.3 (https://github.com/facebookresearch/maskrcnn-benchmark/issues/339)
     return contours
 
 '''

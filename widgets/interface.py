@@ -1,7 +1,7 @@
 from kivy.core.window import Window
 from kivy.properties import (ObjectProperty)
 from kivy.uix.widget import Widget
-from utils import (get_mag_phase, get_loading_screen)
+from utils import (get_mag_phase, get_loading_screen, hide_widget)
 from image_utils import (get_area, get_boxes, get_pixels, add_boxes, detect_contours, add_contours, get_velocity, phase_enhance, make_vertical, make_horizontal)
 import threading
 from kivy.clock import mainthread
@@ -70,6 +70,9 @@ class NArSegInterface(Widget):
         self.model_utils = ModelUtils()
         # initialize loading screen
         self.loading_screen = get_loading_screen()
+        # hide images on initialization since we don't have any files yet
+        hide_widget(self.magnitude.image, True)
+        hide_widget(self.phase.image, True)
 
     # reset relevant variables when new files are dropped
     def reset_variables(self):
