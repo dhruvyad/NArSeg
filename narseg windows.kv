@@ -41,7 +41,7 @@
         GridLayout:
             cols: 2
             pos_hint: {"top": 0.4}
-            size_hint: 0.35, 0.25
+            size_hint: 0.35, 0.27
             padding: 30, 30, 30, 20
             spacing: 25, 15
 
@@ -57,7 +57,7 @@
                     Color:
                         rgba: 1, 1, 1, 1
                     Line:
-                        width: 4
+                        width: 3
                         rectangle: self.x, self.y, self.width, self.height
 
             ToggleButton:
@@ -72,7 +72,7 @@
                     Color:
                         rgba: 1, 1, 1, 1
                     Line:
-                        width: 4
+                        width: 3
                         rectangle: self.x, self.y, self.width, self.height
 
             ToggleButton:
@@ -86,7 +86,7 @@
                     Color:
                         rgba: 1, 1, 1, 1
                     Line:
-                        width: 4
+                        width: 3
                         rectangle: self.x, self.y, self.width, self.height
 
             ToggleButton:
@@ -100,7 +100,7 @@
                     Color:
                         rgba: 1, 1, 1, 1
                     Line:
-                        width: 4
+                        width: 3
                         rectangle: self.x, self.y, self.width, self.height
 
             ToggleButton:
@@ -115,14 +115,14 @@
                     Color:
                         rgba: 1, 1, 1, 1
                     Line:
-                        width: 4
+                        width: 3
                         rectangle: self.x, self.y, self.width, self.height
 
         GridLayout:
             cols: 2
-            size_hint: 0.35, 0.11
+            size_hint: 0.35, 0.12
             padding: 30, 30, 30, 20
-            spacing: 25, 10
+            spacing: 25, 12.5
             Button:
                 text: "OPEN FILES"
                 font_name: 'Lato/Lato-Bold.ttf'
@@ -134,7 +134,7 @@
                     Color:
                         rgba: 1, 1, 1, 1
                     Line:
-                        width: 4
+                        width: 3
                         rectangle: self.x, self.y, self.width, self.height
 
             Button:
@@ -147,7 +147,7 @@
                     Color:
                         rgba: 1, 1, 1, 1
                     Line:
-                        width: 4
+                        width: 3
                         rectangle: self.x, self.y, self.width, self.height
 
         ResultsTable:
@@ -166,5 +166,5 @@
         size: root.size
         padding: 30, 30, 30, 30
         row_force_default: True
-        row_default_height: 70
+        row_default_height: 40
         cols: 7

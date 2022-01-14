@@ -21,7 +21,8 @@ class ResultsTable(Widget):
         print('GOT YOUR RESULTS!')
         print(calculations)
         cols = ['LVA', 'RVA', 'LICA', 'RICA', 'LECA', 'RECA']
-        rows = ['VELOCITY', 'AREA', 'FLOW']
+        # rows = ['VELOCITY', 'AREA', 'FLOW']
+        rows = ['V      (cm/s)', 'A   (mm^2)', 'F (cm^3/s)']
 
         self.table.clear_widgets()
 
@@ -36,12 +37,12 @@ class ResultsTable(Widget):
             self.add2table(get_title_cell(row))
             for col in cols:
                 if col in calculations:
-                    if row == "VELOCITY":
+                    if row == rows[0]: # velocity
                         self.add2table(get_row_cell(calculations[col]['velocity']))
-                    elif row == "AREA":
+                    elif row == rows[1]: # area
                         self.add2table(get_row_cell(calculations[col]['area']))
-                    elif row == "FLOW":
-                        flow = round(float(calculations[col]['area']) * float(calculations[col]['velocity']), 2)
+                    elif row == rows[2]: # flow
+                        flow = round(float(calculations[col]['area']) * float(calculations[col]['velocity']) / 100, 2)
                         self.add2table(get_row_cell(flow))
                     else:
                         self.add2table(get_row_cell('0.0'))
@@ -52,7 +53,7 @@ class ResultsTable(Widget):
         print('adding widgets!')
 
         cols = ['LVA', 'RVA', 'LICA', 'RICA', 'LECA', 'RECA']
-        rows = ['VELOCITY', 'AREA', 'FLOW']
+        rows = ['V      (cm/s)', 'A   (mm^2)', 'F (cm^3/s)']
 
         self.table.cols = len(cols) + 1
 

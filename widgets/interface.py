@@ -146,15 +146,15 @@ class NArSegInterface(Widget):
     def on_view_button_click(self, button):
         view = button.text
         self.current_view = view # update current view
-        if view == ORIGINAL_VIEW:
+        if self.current_view == ORIGINAL_VIEW:
             self.render()
-        if view == BINARY_VIEW:
+        if self.current_view == BINARY_VIEW:
             if self.binary_mask is not None:
                 self.render()
             else:
                 self.start_loading()
                 threading.Thread(target=self.get_binary_mask).start()
-        if view == MULTILABEL_VIEW:
+        if self.current_view == MULTILABEL_VIEW:
             if self.multilabel_mask is not None:
                 self.render()
             else:
@@ -183,6 +183,7 @@ class NArSegInterface(Widget):
             self.filedrop_timer.start()
         self.current_files.append(file_path)
 
+    @mainthread
     def process_files(self):
         self.reset_variables() # reset current data
         mag_image, phase_image = get_mag_phase(self.current_files)
@@ -190,6 +191,7 @@ class NArSegInterface(Widget):
             self.magnitude_img = mag_image
         if phase_image is not None:
             self.phase_img = phase_image
+        # self.current_view = ORIGINAL_VIEW
         self.render()
         # TODO: remove below, it was added only for debugging
         filenames = [val.decode("utf-8").split('/')[-1] for val in self.current_files]

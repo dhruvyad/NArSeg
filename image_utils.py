@@ -24,8 +24,8 @@ Detect the contours of a given numpy mask
 def detect_contours(image):
     image = normalize(image)
     _, image = cv2.threshold(image, 1, 255, cv2.THRESH_BINARY)
-    contours, _  = cv2.findContours(image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE) # should be "_, contours, _" for opencv versions <= 3.4.3 (https://github.com/facebookresearch/maskrcnn-benchmark/issues/339)
-    return contours
+    _, contours, _  = cv2.findContours(image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE) # should be "_, contours, _" for opencv versions <= 3.4.3 (https://github.com/facebookresearch/maskrcnn-benchmark/issues/339)
+    return contours                                                                # otherwise "contours, _" for higher versions
 
 '''
 Add given contours to a given image
@@ -46,7 +46,7 @@ def get_boxes(image, contours):
         (x, y, w, h) = cv2.boundingRect(contour)
 
         contour_mask = np.zeros(image.shape[:2])
-        contour_mask = cv2.drawContours(contour_mask, contour, -1, color=255, thickness=-1)
+        contour_mask = cv2.drawContours(contour_mask, [contour], -1, color=255, thickness=-1)
         points = np.where(contour_mask == 255)
         pixels = imdata[points[0], points[1]]
 
@@ -66,7 +66,7 @@ def get_pixels(image, contours):
     imdata = np.array(image)
     for contour in contours:
         contour_mask = np.zeros(image.shape[:2])
-        contour_mask = cv2.drawContours(contour_mask, contour, -1, color=255, thickness=-1)
+        contour_mask = cv2.drawContours(contour_mask, [contour], -1, color=255, thickness=-1)
         points = np.where(contour_mask == 255)
         current_pixels = imdata[points[0], points[1]]
 
@@ -138,7 +138,7 @@ def get_area(image, arteries, calculations):
     for artery, pixels in arteries.items():
         if artery not in calculations:
             calculations[artery] = {}
-        calculations[artery]['area'] = len(pixels[0]) * 0.5
+        calculations[artery]['area'] = round(len(pixels[0]) * 0.12362256, 2)
     return calculations
 
 '''
